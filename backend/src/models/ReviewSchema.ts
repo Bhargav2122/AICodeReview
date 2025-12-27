@@ -1,7 +1,16 @@
-import mongoose,{ Schema } from "mongoose";
+import mongoose,{ model, Schema, Types } from "mongoose";
 import { userInput } from '../types/userInput.js'
 import { AiReview } from "../types/aiReview.js";
 import { BugType } from "../types/bugtype.js";
+
+export interface ReviewDocument {
+    user: Types.ObjectId;
+    userInput: userInput;
+    aiOutput: AiReview;
+    model: string;
+    createdAt: Date;
+}
+
 
 const UserInputSchema = new Schema<userInput> (
     {
@@ -55,3 +64,27 @@ const aiReviewSchema = new Schema<AiReview> ({
         required: true,
     }
 }, { _id: false });
+
+
+const ReviewSchema = new Schema<ReviewDocument>({
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        userInput: {
+            type:UserInputSchema,
+            required: true,
+        },
+        aiOutput: {
+            type: aiReviewSchema,
+            required: true,
+        },
+        model:{
+            type: String,
+            required: true
+        }
+}, { timestamps: true });
+
+
+export const Review = model<ReviewDocument>("Review", ReviewSchema);
