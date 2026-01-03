@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import { signup } from "../features/auth/authSlice";
 
+
 const SignupPage = () => {
   const [form, setForm] = useState({ fullname: "", email: "", password: "" });
 
@@ -26,7 +27,8 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center max-w-full">
+    <>
+      <div className="min-h-screen flex flex-col justify-center items-center max-w-full">
       <div className="border-2 p-15 rounded-2xl md:w-md">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <h2 className="text-center text-2xl mb-3">Create Your Account</h2>
@@ -69,6 +71,7 @@ const SignupPage = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

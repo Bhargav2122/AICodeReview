@@ -4,6 +4,7 @@ import { useAppDispatch } from "../app/hooks";
 import { signin } from "../features/auth/authSlice";
 
 
+
 const SigninPage = () => {
 const [form, setForm] = useState({ email: "", password: "" });
 
@@ -20,13 +21,15 @@ const [form, setForm] = useState({ email: "", password: "" });
     if( !form.email || !form.password) return;
     try {
       await dispatch(signin(form));
-      navigate("/signin");
+      navigate("/review");
     } catch (e) {
       console.log("singup error", e);
     }
   };
 
   return (
+    <>
+
     <div className="min-h-screen flex flex-col justify-center items-center max-w-full">
       <div className="border-2 p-15 rounded-2xl md:w-md">
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
@@ -63,6 +66,7 @@ const [form, setForm] = useState({ email: "", password: "" });
         </p>
       </div>
     </div>
+    </>
   )
 }
 
