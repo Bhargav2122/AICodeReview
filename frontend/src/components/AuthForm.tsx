@@ -1,11 +1,10 @@
 import React from "react";
 import type { FieldErrors, UseFormRegister, FieldValues, Path } from "react-hook-form";
 
-// 1. Define a base interface for common fields
 interface BaseFormFields extends FieldValues {
   email: string;
   password: string;
-  fullname?: string; // Make it optional here so it's "safe" to reference
+  fullname?: string; 
 }
 
 interface AuthFormProps<T extends BaseFormFields> {
@@ -18,7 +17,6 @@ interface AuthFormProps<T extends BaseFormFields> {
   showFullname?: boolean;
 }
 
-// 2. Add <T extends BaseFormFields> to the function definition
 const AuthForm = <T extends BaseFormFields>({
   submitLabel,
   onSubmit,

@@ -13,7 +13,7 @@ export interface AIReview {
     bugs:Bug[];
     improvements: string[];
     securityIssues: string[];
-    optmizedCode: string;
+    optimizedCode: string;
     summary: string;
 }
 
