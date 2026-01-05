@@ -25,10 +25,16 @@ const {
     try {
       setLoading(true);
       await dispatch(signin(data)).unwrap();
-      toast.success("Account created successfully!");
+      toast.success("logged in successfully!",{
+        position:"top-right", 
+        autoClose:3000
+      });
       nav("/review");
     } catch (err: any) {
-      toast.error(err?.message || "Signup failed.");
+      toast.error(err?.message || "login failed.",{
+        position:"top-right",
+        autoClose:3000
+      });
     } finally {
       setLoading(false);
     }

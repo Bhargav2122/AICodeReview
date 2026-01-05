@@ -23,10 +23,16 @@ export const SignupPage = () => {
     try {
       setLoading(true);
       await dispatch(signup(data)).unwrap();
-      toast.success("Account created successfully!");
+      toast.success("Account created successfully!",{
+        position:"top-right",
+        autoClose:3000
+      });
       nav("/signin");
     } catch (err: any) {
-      toast.error(err?.message || "Signup failed.");
+      toast.error(err?.message || "register failed.",{
+        position:"top-right",
+        autoClose:3000
+      });
     } finally {
       setLoading(false);
     }
