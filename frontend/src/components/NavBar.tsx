@@ -1,84 +1,71 @@
-import { Link } from "react-router-dom";
-
 import { useState } from "react";
-import { useAppSelector } from "../app/hooks";
+import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import menuBar from "../assets/menu-bar.png";
+import { logoutUser } from "../features/auth/authSlice";
 
 const NavBar = () => {
-  const { user} = useAppSelector((s) => s.auth);
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAppSelector((s) => s.auth);
+  const dispatch = useAppDispatch();
 
-  const closeMenu = () => setOpen(false);
+  const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="relative z-50 shadow-lg px-6 py-3.5 flex items-center justify-between">
-      <h1 className="text-2xl font-poppins font-medium">TwinScan</h1>
+    <nav className="bg-black border-b-2 border-b-gray-400 text-white relative z-50 shadow-lg h-16 flex justify-between items-center px-5 ">
+      <div className=" cursor-pointer font-poppins font-bold text-3xl">
+        TwinScan
+      </div>
 
-      {/* Hamburger (mobile only) */}
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="md:hidden text-gray-600 focus:outline-none"
-      >
-        {open ? (
-          <span className="text-2xl font-bold">✕</span>
+      {/* Hamburger menu */}
+      <button className="md:hidden" onClick={() => setIsOpen((prev) => !prev)}>
+        {isOpen ? (
+          <span className="text-2xl font-bold bg-white text-black">X</span>
         ) : (
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          <img src={menuBar} className="h-10  bg-white" />
         )}
       </button>
 
-      {/* Menu */}
       <div
-        className={`
-          ${open ? "flex" : "hidden"}
-          md:flex
-          flex-col md:flex-row
-          absolute md:static
-          top-full left-0
-          w-full md:w-auto
-          bg-white md:bg-transparent
-          gap-4
-          p-5 md:p-0
-          shadow-md md:shadow-none
-          font-gsans text-lg
-        `}
+        className={`${
+          isOpen ? "flex" : "hidden"
+        } md:flex flex-col  md:flex-row absolute md:static top-full bg-black py-2 right-5 gap-3 px-3 font-gsans text-xl`}
       >
         {user ? (
-          
-          <Link to="/profile" onClick={closeMenu}>
-            <img
-              src={`${user.profilePic}`}
-              alt="Profile"
-              className="w-10 h-10 rounded-full border-2 border-blue-500"
-            />
-          </Link>
+          <>
+            <button
+              onClick={() => dispatch(logoutUser())}
+              className="hover:bg-white hover:text-black px-4 py-1.5 "
+            >
+              Log out
+            </button>
+            <Link
+              to="/profile"
+              onClick={closeMenu}
+              className="hover:bg-white hover:text-black px-4 py-1.5"
+            >
+              profile
+            </Link>
+          </>
         ) : (
           <>
-          <hr />
             <Link
               to="/"
               onClick={closeMenu}
-              className="px-4 py-1.5 hover:bg-black hover:outline-1 hover:text-white rounded-lg"
+              className="    hover:bg-linear-to-r from-indigo-500 to-blue-600
+          hover:from-indigo-400 hover:to-blue-500
+          transition-all duration-200 px-4 py-1.5 rounded-md "
             >
               Home
             </Link>
-
             <Link
-              to="/signup"
+              to="/signin"
               onClick={closeMenu}
-              className="px-4 py-1.5  hover:bg-black hover:outline-1 hover:text-white rounded-lg"
+              className="    hover:bg-linear-to-r from-indigo-500 to-blue-600
+          hover:from-indigo-400 hover:to-blue-500
+          transition-all duration-200 px-4 py-1.5 rounded-md "
             >
-              Signup
+              Login
             </Link>
           </>
         )}

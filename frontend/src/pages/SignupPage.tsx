@@ -1,78 +1,55 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema, type SignupForm } from "../schemas/authSchema";
 import { useAppDispatch } from "../app/hooks";
 import { signup } from "../features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import AuthForm  from "../components/AuthForm";
 
-
-const SignupPage = () => {
-  const [form, setForm] = useState({ fullname: "", email: "", password: "" });
-
-  const navigate = useNavigate();
+export const SignupPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupForm>({ resolver: zodResolver(signupSchema) });
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const nav = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({...prev, [name]: value}));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if(!form.fullname || !form.email || !form.password) return;
+  const onSubmit = async (data: SignupForm) => {
+    if (loading) return;
     try {
-      await dispatch(signup(form));
-      navigate("/signin");
-    } catch (e) {
-      console.log("singup error", e);
+      setLoading(true);
+      await dispatch(signup(data)).unwrap();
+      toast.success("Account created successfully!");
+      nav("/signin");
+    } catch (err: any) {
+      toast.error(err?.message || "Signup failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="min-h-screen flex flex-col justify-center items-center max-w-full">
-      <div className="border-2 p-15 rounded-2xl md:w-md">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <h2 className="text-center text-2xl mb-3">Create Your Account</h2>
-          <label className="font-gsans">Enter your fullname</label>
-          <input
-            type="text"
-            name="fullname"
-            value={form.fullname}
-            onChange={handleChange}
-            className="border outline-none px-1.5 h-8"
-          />
-          <label className="font-gsans">Enter your Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            className="border outline-none px-1.5 h-8"
-          />
-          <label className="font-gsans">Enter your password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            className="border outline-none px-1.5 h-8"
-          />
-          <button
-            type="submit"
-            className="bg-black cursor-pointer mt-2.5 mb-2.5 text-white px-7 py-2 rounded-3xl hover:bg-white hover:text-black hover:outline-1 font-poppins"
-          >
-            register
-          </button>
-        </form>
-        <p className="text-center font-poppins">
-          Already have an account?{" "} 
-          <Link to="/signin" className="hover:underline">
-             login
-          </Link>
-        </p>
+    <section className="flex-1 flex items-center justify-center
+      bg-[radial-gradient(circle_at_center,#1f2937_0%,#020617_55%,#000000_100%)]">
+      <div className="w-88 rounded-2xl bg-neutral-900/80 p-8 shadow-xl shadow-black/40 backdrop-blur">
+        <h2 className="text-2xl font-semibold text-white text-center">
+          Create your account
+        </h2>
+        <AuthForm<SignupForm>
+          title="Signup"
+          submitLabel="Register"
+          onSubmit={handleSubmit(onSubmit)}
+          register={register}
+          errors={errors}
+          loading={loading}
+          showFullname={true} // only for signup
+        />
+                <p className="text-white text-center mt-2">Already have an account?{" "}<Link to='/signin' className="text-indigo-400">login</Link></p>
       </div>
-    </div>
-    </>
+    </section>
   );
 };
-
-export default SignupPage;
