@@ -52,8 +52,10 @@ AICodeReview is a full-stack web application that allows users to write, submit,
 
 Below is a 30-second demo showcasing the app workflow:
 
-![Demo](./demo/AIReviewDemo.gif)
-
+<video controls width="600">
+  <source src="./demo/AIReviewDemo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ---
 
