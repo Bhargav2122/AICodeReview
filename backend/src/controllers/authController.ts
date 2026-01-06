@@ -19,7 +19,7 @@ export const signUp = asyncHandler(async(req, res, next) => {
      
     const user = await User.create({ fullname, email, password});
     const token = generateToken({_id: user._id.toString(), email: user.email});
-    res.cookie('token', token, { httpOnly: true, sameSite:'lax'});
+    res.cookie('token', token, { httpOnly: true, sameSite:'none'});
 
     res.status(200).json({
         _id: user._id,
