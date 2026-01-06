@@ -39,13 +39,7 @@ const NavBar = () => {
             >
               Log out
             </button>
-            <Link
-              to="/profile"
-              onClick={closeMenu}
-              className="hover:bg-white hover:text-black px-4 py-1.5"
-            >
-              profile
-            </Link>
+            
           </>
         ) : (
           <>

@@ -18,11 +18,28 @@ export interface AIReview {
 }
 
 export interface ReviewResponse {
-    succes: boolean;
+    success: boolean;
     review: {
         _id: string;
         aiOutput: AIReview;
         model: string;
-        createdAT: string;
+        createdAt: string;
     }
+}
+
+export interface ReviewHistory {
+  _id: string;
+  userInput: { code: string };
+  aiOutput: {
+    bugs: any[];
+    improvements: string[];
+    securityIssues: string[];
+    optimizedCode: string;
+    summary: string;
+  };
+  createdAt: string;
+}
+export interface ReviewHistoryResponse {
+  success: boolean;
+  history: ReviewHistory[];
 }

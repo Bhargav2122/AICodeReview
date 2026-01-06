@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import sideBar from "../assets/sidebar.png";
 import { Editor } from "@monaco-editor/react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getReview } from "../features/review/reviewSlice";
+import {
+  getReview,
+  getHistories,
+  getSingleChat,
+} from "../features/review/reviewSlice";
 
 const ReviewPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState("");
-  const { data, loading } = useAppSelector((s) => s.review);
+  const { data, selectedChat, loading, histories } = useAppSelector(
+    (s) => s.review
+  );
   const dispatch = useAppDispatch();
 
   const handleClick = async () => {
     if (!code.trim()) return;
     await dispatch(getReview({ code }));
   };
+  useEffect(() => {
+    if (selectedChat) {
+      setCode(selectedChat.userInput.code);
+    }
+    dispatch(getHistories());
+  }, [dispatch, selectedChat]);
 
   return (
     <div className="h-screen bg-neutral-950 text-white flex flex-col md:flex-row overflow-hidden">
@@ -50,8 +62,21 @@ const ReviewPage = () => {
         {isOpen && (
           <div className="flex-1 p-3 space-y-2 overflow-y-auto no-scrollbar">
             <p className="text-sm text-gray-400">Recent Chats</p>
-            <div className="bg-neutral-800 px-3 py-2 rounded">Auth Review</div>
-            <div className="bg-neutral-800 px-3 py-2 rounded">Navbar Bug</div>
+
+            {histories.map((h) => (
+              <div
+                key={h._id}
+                onClick={() => dispatch(getSingleChat(h._id))}
+                className="bg-neutral-800 px-3 py-2 rounded cursor-pointer hover:bg-neutral-700"
+              >
+                <p className="text-sm truncate">
+                  {h.userInput.code.slice(0, 40)}...
+                </p>
+                <span className="text-xs text-gray-400">
+                  {new Date(h.createdAt).toLocaleString()}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </aside>
@@ -111,7 +136,65 @@ const ReviewPage = () => {
             <h3 className="mb-2 font-semibold">AI Review</h3>
             {/* on mobile, this gets a specific height so it's visible */}
             <div className="h-[300px] md:flex-1 bg-neutral-900 border border-neutral-800 rounded p-4 overflow-y-auto no-scrollbar">
-              {data && (
+              {selectedChat ? (
+                <>
+                  <section>
+                    <h3 className="text-lg font-semibold">Summary</h3>
+                    <p>{selectedChat.aiOutput.summary}</p>
+                  </section>
+
+                  {selectedChat.aiOutput.bugs.length > 0 && (
+                    <section>
+                      <h3 className="text-lg font-semibold">Bugs</h3>
+                      {selectedChat.aiOutput.bugs.map((bug, i) => (
+                        <div key={i} className="border p-2 rounded mb-2">
+                          <p>
+                            <strong>Severity:</strong> {bug.severity}
+                          </p>
+                          <p>
+                            <strong>Issue:</strong> {bug.issue}
+                          </p>
+                          <p>
+                            <strong>Why:</strong> {bug.why}
+                          </p>
+                          <pre className="bg-amber-50 text-black p-2 mt-2 rounded">
+                            {bug.fix}
+                          </pre>
+                        </div>
+                      ))}
+                    </section>
+                  )}
+
+                  {selectedChat.aiOutput.improvements.length > 0 && (
+                    <section>
+                      <h3 className="text-lg font-semibold">Improvements</h3>
+                      <ul className="list-disc pl-5">
+                        {selectedChat.aiOutput.improvements.map((imp, i) => (
+                          <li key={i}>{imp}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  <section>
+                    <h3 className="text-lg font-semibold">Optimized Code</h3>
+                    <pre className="bg-amber-50 text-black p-2 rounded">
+                      {selectedChat.aiOutput.optimizedCode}
+                    </pre>
+                  </section>
+
+                  {selectedChat.aiOutput.securityIssues.length > 0 && (
+                    <section>
+                      <h3 className="text-lg font-semibold">Security Issues</h3>
+                      <ul className="list-disc pl-5 text-red-600">
+                        {selectedChat.aiOutput.securityIssues.map((sec, i) => (
+                          <li key={i}>{sec}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+                </>
+              ) : data ? (
                 <>
                   <section>
                     <h3 className="text-lg font-semibold">Summary</h3>
@@ -150,11 +233,13 @@ const ReviewPage = () => {
                       </ul>
                     </section>
                   )}
-                   <h3 className="text-lg font-semibold">optimizedCode</h3>
-                    <section className="bg-amber-50 text-black">
-                    <pre>{data.aiOutput.optimizedCode}</pre>
-                  </section>
 
+                  <section>
+                    <h3 className="text-lg font-semibold">Optimized Code</h3>
+                    <pre className="bg-amber-50 text-black p-2 rounded">
+                      {data.aiOutput.optimizedCode}
+                    </pre>
+                  </section>
 
                   {data.aiOutput.securityIssues.length > 0 && (
                     <section>
@@ -167,6 +252,8 @@ const ReviewPage = () => {
                     </section>
                   )}
                 </>
+              ) : (
+                <p className="text-gray-400">No review selected</p>
               )}
             </div>
           </section>
