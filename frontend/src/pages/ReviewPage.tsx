@@ -157,7 +157,10 @@ const ReviewPage = () => {
                           <p>
                             <strong>Why:</strong> {bug.why}
                           </p>
-                          <pre className="bg-amber-50 text-black p-2 mt-2 rounded">
+                          <pre
+                            className="bg-amber-50 text-black p-2 mt-2 rounded
+                max-w-full overflow-x-auto whitespace-pre"
+                          >
                             {bug.fix}
                           </pre>
                         </div>
@@ -178,7 +181,10 @@ const ReviewPage = () => {
 
                   <section>
                     <h3 className="text-lg font-semibold">Optimized Code</h3>
-                    <pre className="bg-amber-50 text-black p-2 rounded">
+                    <pre
+                      className="bg-amber-50 text-black p-2 rounded
+                max-w-full overflow-x-auto whitespace-pre"
+                    >
                       {selectedChat.aiOutput.optimizedCode}
                     </pre>
                   </section>
@@ -215,7 +221,10 @@ const ReviewPage = () => {
                           <p>
                             <strong>Why:</strong> {bug.why}
                           </p>
-                          <pre className="bg-amber-50 text-black p-2 mt-2 rounded">
+                          <pre
+                            className="bg-amber-50 text-black p-2 mt-2 rounded
+                max-w-full overflow-x-auto whitespace-pre"
+                          >
                             {bug.fix}
                           </pre>
                         </div>
@@ -236,7 +245,10 @@ const ReviewPage = () => {
 
                   <section>
                     <h3 className="text-lg font-semibold">Optimized Code</h3>
-                    <pre className="bg-amber-50 text-black p-2 rounded">
+                    <pre
+                      className="bg-amber-50 text-black p-2 rounded
+                max-w-full overflow-x-auto whitespace-pre"
+                    >
                       {data.aiOutput.optimizedCode}
                     </pre>
                   </section>
