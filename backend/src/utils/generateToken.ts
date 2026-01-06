@@ -7,5 +7,5 @@ export interface jwtPayload {
 }
 
 export const generateToken = (user: jwtPayload) => {
-    return jwt.sign({_id: user._id.toString(), email: user.email}, process.env.JWT_SECRET_KEY as string, { expiresIn: "2d"})
+    return jwt.sign({_id: user._id.toString(), email: user.email}, process.env.JWT_SECRET_KEY as string, { expiresIn: "1h"})
 }

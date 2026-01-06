@@ -14,12 +14,15 @@ const port = process.env.PORT || 2000;
 connectDB();
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors());
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials: true
+}));
 app.use('/api/auth', userRouter)
 app.use('/api/ai', aiRoutes)
 app.use(errorMiddleware);
 app.get('/', (req: Request, res: Response) => {
-    res.send('hello');
+    res.send('Backend running on it takes time');
 });
 
 app.listen(port, ()=> {

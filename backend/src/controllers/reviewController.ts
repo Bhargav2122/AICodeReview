@@ -34,13 +34,13 @@ export const review = asyncHandler(async (req, res, next) => {
                          Issue: Brief Description.
                          Why: Explanation of the impact.
                          Fix: A correct code snippet.
-                      If the code is sound, start with "Code looks good".
-                     
-                     Constraints You need to automatically identify the code and find the errors,provide code
+
+                       
+                       Constraints You need to automatically identify the code and find the errors,provide code
                        If you donot know the answer, state that your are unsure rather than providing the incorrect information.
                       `;
   const result = await ai.models.generateContent({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-2.5-flash",
     config: {
       systemInstruction: systemPrompt,
       responseMimeType: "application/json",
@@ -117,3 +117,28 @@ export const review = asyncHandler(async (req, res, next) => {
     review:savedReview,
   })
 });
+
+export const reviewHistory = asyncHandler( async(req, res, next) => {
+    
+    const history = await Review.find({ user: req.user._id}).sort({ createdAt: -1}).select("userInput aiOutput createdAt");
+    res.status(200).json({
+      success: true,
+      count: history.length,
+      history
+    })
+})
+
+export const singleHistory = asyncHandler( async(req, res, next) => {
+  const review = await Review.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  })
+
+  if(!review) {
+    throw new ApiError(404, "Review not found");
+  }
+  res.status(200).json({
+    success: true,
+    review
+  })
+})

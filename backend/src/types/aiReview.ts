@@ -1,4 +1,4 @@
-import { BugType } from "./bugtype.js";
+import { BugType } from "./bugType.js";
 
 
 export interface AiReview {

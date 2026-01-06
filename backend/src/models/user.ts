@@ -5,6 +5,7 @@ interface IUser {
     fullname: string;
     email: string;
     password: string;
+    profilePic?: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -23,7 +24,8 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
         minLength: 6,
-    }
+    },
+
 }, { timestamps: true});
 
  userSchema.pre('save', async function ( this: HydratedDocument<IUser>) {

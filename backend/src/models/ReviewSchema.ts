@@ -1,7 +1,7 @@
 import mongoose,{ model, Schema, Types } from "mongoose";
 import { userInput } from '../types/userInput.js'
 import { AiReview } from "../types/aiReview.js";
-import { BugType } from "../types/bugtype.js";
+import { BugType } from "../types/bugType.js";
 
 export interface ReviewDocument {
     user: Types.ObjectId;
